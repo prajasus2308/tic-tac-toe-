@@ -3,223 +3,108 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tic Tac Toe — Glowing Responsive</title>
+  <title>Tic Tac Toe — Custom Names</title>
   <style>
-    /* Reset and base */
-    :root {
-      --bg1: #0f1020;
-      --bg2: #1a1b3a;
-      --glow1: #7c3aed;   /* purple */
-      --glow2: #06b6d4;   /* cyan */
-      --glow3: #f43f5e;   /* pink */
-      --tile: #111827;    /* slate-900 */
-      --tile-hover: #0b1220;
-      --line: #334155;    /* slate-700 */
-      --x: #22d3ee;       /* sky/cyan */
-      --o: #a78bfa;       /* violet */
-      --text: #e5e7eb;    /* gray-200 */
-      --accent: #f59e0b;  /* amber */
-    }
-
-    * { box-sizing: border-box; }
-    html, body {
-      height: 100%;
-      margin: 0;
-      color: var(--text);
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
-      background: radial-gradient(120vmax 120vmax at 10% 20%, var(--bg2), var(--bg1));
-      overflow: hidden;
-    }
-
-    /* Animated glow backdrop */
-    .glow {
-      position: fixed;
-      inset: -30vmax;
-      filter: blur(60px);
-      pointer-events: none;
-      z-index: 0;
-      background:
-        radial-gradient(30vmax 30vmax at 20% 30%, color-mix(in oklab, var(--glow1) 60%, transparent), transparent 60%),
-        radial-gradient(25vmax 25vmax at 80% 20%, color-mix(in oklab, var(--glow2) 55%, transparent), transparent 60%),
-        radial-gradient(28vmax 28vmax at 50% 80%, color-mix(in oklab, var(--glow3) 45%, transparent), transparent 60%);
-      animation: floatGlow 12s ease-in-out infinite alternate;
-    }
-    @keyframes floatGlow {
-      0%   { transform: translate3d(0, 0, 0) scale(1); }
-      50%  { transform: translate3d(1.5vmax, -1vmax, 0) scale(1.03); }
-      100% { transform: translate3d(-1vmax, 1.5vmax, 0) scale(1.06); }
-    }
-
-    /* Container */
-    .wrap {
-      position: relative;
-      z-index: 1;
-      display: grid;
-      place-items: center;
-      height: 100%;
-      padding: 2vmin;
-      gap: 2vmin;
-    }
-
-    /* Header/status */
-    .header {
-      text-align: center;
-    }
-    .title {
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      font-size: clamp(1.25rem, 1rem + 2vmin, 2rem);
-      margin: 0;
-    }
-    .status {
-      margin-top: 0.25rem;
-      font-size: clamp(0.9rem, 0.8rem + 1vmin, 1.1rem);
-      color: #cbd5e1;
-    }
-
-    /* Board */
-    .board {
-      width: min(90vmin, 520px);
-      aspect-ratio: 1 / 1;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: repeat(3, 1fr);
-      gap: clamp(6px, 1.4vmin, 12px);
-      background: color-mix(in oklab, var(--tile) 80%, black);
-      border-radius: 16px;
-      padding: clamp(6px, 1.4vmin, 12px);
-      box-shadow:
-        0 40px 120px -30px color-mix(in oklab, var(--glow2) 35%, transparent),
-        inset 0 0 0 1px color-mix(in oklab, var(--line) 60%, transparent);
-    }
-
-    /* Cell */
-    .cell {
-      display: grid;
-      place-items: center;
-      background: linear-gradient(180deg, color-mix(in oklab, var(--tile) 93%, black), color-mix(in oklab, var(--tile) 85%, black));
-      border-radius: 12px;
-      box-shadow:
-        inset 0 0 0 1px color-mix(in oklab, var(--line) 65%, transparent),
-        0 8px 24px -12px rgba(0,0,0,.6);
-      cursor: pointer;
-      user-select: none;
-      outline: none;
-      transition: transform .12s ease, box-shadow .2s ease, background .25s ease;
-    }
-    .cell:hover { transform: translateY(-2px); }
-    .cell:active { transform: translateY(0); }
-    .cell:focus-visible {
-      box-shadow:
-        0 0 0 3px color-mix(in oklab, var(--glow2) 60%, transparent),
-        inset 0 0 0 1px color-mix(in oklab, var(--line) 65%, transparent);
-    }
-
-    /* Marks */
-    .mark {
-      font-weight: 800;
-      line-height: 1;
-      font-size: clamp(2.6rem, 2rem + 7vmin, 6rem);
-      letter-spacing: 0.04em;
-      text-shadow:
-        0 0 12px color-mix(in oklab, var(--glow2) 35%, transparent),
-        0 0 22px color-mix(in oklab, var(--glow1) 25%, transparent);
-    }
-    .mark.x { color: var(--x); }
-    .mark.o { color: var(--o); }
-
-    /* Controls */
-    .controls {
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #1a1b3a, #0f1020);
+      color: #fff;
       display: flex;
-      gap: 1rem;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
+      height: 100vh;
+      margin: 0;
     }
-    .btn {
-      appearance: none;
-      border: 0;
-      border-radius: 999px;
-      padding: .7rem 1.2rem;
-      font-weight: 600;
-      color: var(--text);
+    h1 { margin-bottom: 10px; }
+    .name-inputs {
+      margin-bottom: 15px;
+    }
+    .name-inputs input {
+      margin: 5px;
+      padding: 8px;
+      border-radius: 5px;
+      border: none;
+    }
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 5px;
+    }
+    .cell {
+      background: #111827;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
       cursor: pointer;
-      background:
-        radial-gradient(120% 120% at 10% 10%, color-mix(in oklab, var(--glow1) 25%, transparent), transparent 40%),
-        linear-gradient(180deg, color-mix(in oklab, var(--tile) 95%, black), color-mix(in oklab, var(--tile) 88%, black));
-      box-shadow:
-        0 10px 30px -12px color-mix(in oklab, var(--glow3) 35%, transparent),
-        inset 0 0 0 1px color-mix(in oklab, var(--line) 65%, transparent);
-      transition: transform .12s ease, box-shadow .2s ease;
+      transition: background 0.3s;
     }
-    .btn:hover { transform: translateY(-2px); }
-    .btn:active { transform: translateY(0); }
-
-    /* Responsive helpers */
-    @media (max-width: 420px) {
-      .controls { gap: .75rem; }
-      .btn { padding: .6rem 1rem; }
+    .cell:hover { background: #1f2937; }
+    #status { margin-top: 15px; font-size: 1.2rem; }
+    button {
+      margin-top: 10px;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      background: #06b6d4;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
     }
+    button:hover { background: #0891b2; }
   </style>
 </head>
 <body>
-  <div class="glow" aria-hidden="true"></div>
+  <h1>Tic Tac Toe</h1>
 
-  <main class="wrap">
-    <section class="header">
-      <h1 class="title">Tic Tac Toe</h1>
-      <p id="status" class="status" aria-live="polite">Player X’s turn</p>
-    </section>
+  <!-- Player name inputs -->
+  <div class="name-inputs">
+    <input type="text" id="playerX" placeholder="Enter name for Player X" />
+    <input type="text" id="playerO" placeholder="Enter name for Player O" />
+    <button onclick="startGame()">Start Game</button>
+  </div>
 
-    <section class="board" role="grid" aria-label="Tic Tac Toe board">
-      <!-- 9 cells -->
-      <!-- They auto-size via CSS grid and aspect-ratio -->
-      <!-- JS will attach handlers and state -->
-      <button class="cell" role="gridcell" aria-label="Cell 1" data-index="0"></button>
-      <button class="cell" role="gridcell" aria-label="Cell 2" data-index="1"></button>
-      <button class="cell" role="gridcell" aria-label="Cell 3" data-index="2"></button>
-      <button class="cell" role="gridcell" aria-label="Cell 4" data-index="3"></button>
-      <button class="cell" role="gridcell" aria-label="Cell 5" data-index="4"></button>
-      <button class="cell" role="gridcell" aria-label="Cell 6" data-index="5"></button>
-      <button class="cell" role="gridcell" aria-label="Cell 7" data-index="6"></button>
-      <button class="cell" role="gridcell" aria-label="Cell 8" data-index="7"></button>
-      <button class="cell" role="gridcell" aria-label="Cell 9" data-index="8"></button>
-    </section>
+  <!-- Board -->
+  <div class="board" id="board"></div>
 
-    <section class="controls">
-      <button id="reset" class="btn" type="button">Reset</button>
-    </section>
-  </main>
+  <!-- Status -->
+  <p id="status">Enter names and start the game!</p>
+  <button onclick="resetGame()">Reset</button>
 
   <script>
-    const cells = Array.from(document.querySelectorAll('.cell'));
-    const statusEl = document.getElementById('status');
-    const resetBtn = document.getElementById('reset');
-
+    const boardEl = document.getElementById("board");
+    const statusEl = document.getElementById("status");
     let board = Array(9).fill(null);
-    let current = 'X';
+    let current = "X";
     let gameOver = false;
+    let playerNames = { X: "Player X", O: "Player O" };
 
     const wins = [
-      [0,1,2],[3,4,5],[6,7,8], // rows
-      [0,3,6],[1,4,7],[2,5,8], // cols
-      [0,4,8],[2,4,6]          // diags
+      [0,1,2],[3,4,5],[6,7,8],
+      [0,3,6],[1,4,7],[2,5,8],
+      [0,4,8],[2,4,6]
     ];
 
-    function setStatus(text) { statusEl.textContent = text; }
+    function startGame() {
+      const nameX = document.getElementById("playerX").value.trim();
+      const nameO = document.getElementById("playerO").value.trim();
+      if (nameX) playerNames.X = nameX;
+      if (nameO) playerNames.O = nameO;
+      resetGame();
+      statusEl.textContent = `${playerNames[current]}'s turn`;
+    }
 
     function render() {
-      cells.forEach((cell, i) => {
-        cell.innerHTML = '';
-        const val = board[i];
-        if (val) {
-          const span = document.createElement('span');
-          span.className = `mark ${val.toLowerCase()}`;
-          span.textContent = val;
-          cell.appendChild(span);
-          cell.setAttribute('aria-label', `Cell ${i+1}: ${val}`);
-        } else {
-          cell.setAttribute('aria-label', `Cell ${i+1}: empty`);
-        }
+      boardEl.innerHTML = "";
+      board.forEach((val, i) => {
+        const cell = document.createElement("div");
+        cell.className = "cell";
+        cell.textContent = val ? val : "";
+        cell.addEventListener("click", () => handleClick(i));
+        boardEl.appendChild(cell);
       });
     }
 
@@ -242,39 +127,24 @@
       const winner = checkWinner();
       if (winner) {
         gameOver = true;
-        setStatus(`Player ${winner} wins!`);
+        statusEl.textContent = `${playerNames[winner]} wins!`;
       } else if (checkDraw()) {
         gameOver = true;
-        setStatus(`It's a draw.`);
+        statusEl.textContent = "It's a draw.";
       } else {
-        current = current === 'X' ? 'O' : 'X';
-        setStatus(`Player ${current}’s turn`);
+        current = current === "X" ? "O" : "X";
+        statusEl.textContent = `${playerNames[current]}'s turn`;
       }
       render();
     }
 
-    // Keyboard support (Enter/Space to play)
-    function handleKey(e, i) {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        handleClick(i);
-      }
-    }
-
-    function reset() {
+    function resetGame() {
       board = Array(9).fill(null);
-      current = 'X';
+      current = "X";
       gameOver = false;
-      setStatus(`Player ${current}’s turn`);
       render();
     }
 
-    // Init
-    cells.forEach((cell, i) => {
-      cell.addEventListener('click', () => handleClick(i));
-      cell.addEventListener('keydown', (e) => handleKey(e, i));
-    });
-    resetBtn.addEventListener('click', reset);
     render();
   </script>
 </body>
