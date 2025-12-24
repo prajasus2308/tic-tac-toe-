@@ -1,0 +1,246 @@
+DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Ultimate Tic Tac Toe</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body {
+        font-family: Poppins, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        height: 100vh;
+        margin: 0;
+        transition: 0.3s;
+    }
+
+    :root {
+        --bg: #0d1117;
+        --card: #161b22;
+        --text: white;
+        --border: #003366;
+    }
+    .light {
+        --bg: #f7f7f7;
+        --card: white;
+        --text: black;
+        --border: #0057b3;
+    }
+
+    h1 { margin-bottom: 10px; }
+
+    #controls {
+        margin-bottom: 15px;
+        display: flex;
+        gap: 12px;
+    }
+    input {
+        padding: 6px 10px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+    }
+    #game {
+        display: grid;
+        grid-template-columns: repeat(3, min(25vw, 110px));
+        border: 5px solid var(--border);
+        border-radius: 8px;
+    }
+    .cell {
+        width: min(25vw, 110px);
+        height: min(25vw, 110px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 45px;
+        background: var(--card);
+        border: 2px solid var(--border);
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    .cell:hover { filter: brightness(1.2); }
+
+    .pop {
+        animation: pop 0.25s ease;
+    }
+    @keyframes pop { 0%{transform:scale(.6);}100%{transform:scale(1);} }
+
+    .win {
+        animation: glow 1s infinite alternate;
+    }
+    @keyframes glow {
+        0% { box-shadow: 0 0 5px yellow; }
+        100% { box-shadow: 0 0 20px yellow; }
+    }
+
+    #status { margin-top: 10px; font-size: 22px; }
+    #scoreboard { margin-top: 6px; font-size: 18px; }
+
+    #actions {
+        margin-top: 20px;
+        display: flex;
+        gap: 12px;
+    }
+    button {
+        padding: 10px 20px;
+        font-size: 17px;
+        cursor: pointer;
+        border-radius: 6px;
+        border: none;
+        background: #238636;
+        color: white;
+        transition: 0.2s;
+    }
+    button:hover { background: #2ea043; }
+
+    #themeBtn { background: #005dcc; }
+    #themeBtn:hover { background: #0072ff; }
+
+</style>
+</head>
+<body>
+
+<h1>Ultimate Tic Tac Toe</h1>
+
+<div id="controls">
+    <input id="p1" placeholder="Player X name" value="Player X">
+    <input id="p2" placeholder="Player O name" value="Player O">
+    <label>
+        <input type="checkbox" id="vsBot"> Play vs Computer
+    </label>
+</div>
+
+<div id="game"></div>
+<div id="status"></div>
+<div id="scoreboard"></div>
+
+<div id="actions">
+    <button onclick="restart()">Restart Game</button>
+    <button onclick="resetScore()">Reset Score</button>
+    <button id="themeBtn" onclick="toggleTheme()">Theme</button>
+</div>
+
+<!-- Sound effects -->
+<audio id="clickS" src="https://assets.mixkit.co/sfx/preview/mixkit-video-game-dark-coin-2845.mp3"></audio>
+<audio id="winS" src="https://assets.mixkit.co/sfx/preview/mixkit-extra-bonus-in-a-video-game-2045.mp3"></audio>
+<audio id="drawS" src="https://assets.mixkit.co/sfx/preview/mixkit-retro-game-notification-212.mp3"></audio>
+
+<script>
+    const game = document.getElementById("game");
+    const status = document.getElementById("status");
+    const scoreboard = document.getElementById("scoreboard");
+    const vsBot = document.getElementById("vsBot");
+
+    let p1Score = 0, p2Score = 0;
+    let currentPlayer = "X";
+    let board = Array(9).fill("");
+    let gameActive = true;
+    let theme = "dark";
+
+    const winPatterns = [
+        [0,1,2], [3,4,5], [6,7,8],
+        [0,3,6], [1,4,7], [2,5,8],
+        [0,4,8], [2,4,6]
+    ];
+
+    function createBoard() {
+        game.innerHTML = "";
+        board.forEach((_, i) => {
+            const cell = document.createElement("div");
+            cell.classList.add("cell");
+            cell.textContent = board[i];
+            cell.onclick = () => makeMove(i, cell);
+            game.appendChild(cell);
+        });
+        updateUI();
+    }
+
+    function makeMove(i, cell) {
+        if (!gameActive || board[i]) return;
+        play("clickS");
+        board[i] = currentPlayer;
+        cell.textContent = currentPlayer;
+        cell.classList.add("pop");
+        checkWinner();
+
+        if (gameActive) {
+            currentPlayer = currentPlayer === "X" ? "O" : "X";
+            updateUI();
+            if (vsBot.checked && currentPlayer === "O") setTimeout(botMove, 400);
+        }
+    }
+
+    function botMove() {
+        let empty = board.map((v, i) => v === "" ? i : null).filter(v => v !== null);
+        let choice = empty[Math.floor(Math.random() * empty.length)];
+        game.children[choice].click();
+    }
+
+    function updateUI() {
+        const p1 = document.getElementById("p1").value;
+        const p2 = document.getElementById("p2").value;
+        status.textContent = `${currentPlayer === "X" ? p1 : p2}'s turn`;
+        scoreboard.textContent = `${p1} (X): ${p1Score} — ${p2} (O): ${p2Score}`;
+    }
+
+    function checkWinner() {
+        for (let [a,b,c] of winPatterns) {
+            if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+                gameActive = false;
+                highlightWin(a,b,c);
+                play("winS");
+
+                const winnerName = currentPlayer === "X"
+                    ? document.getElementById("p1").value
+                    : document.getElementById("p2").value;
+
+                status.textContent = `${winnerName} Wins! 🎉`;
+                currentPlayer === "X" ? p1Score++ : p2Score++;
+                updateUI();
+                return;
+            }
+        }
+        if (!board.includes("")) {
+            play("drawS");
+            status.textContent = "Draw 😐";
+            gameActive = false;
+        }
+    }
+
+    function highlightWin(a,b,c) {
+        game.children[a].classList.add("win");
+        game.children[b].classList.add("win");
+        game.children[c].classList.add("win");
+    }
+
+    function restart() {
+        board = Array(9).fill("");
+        gameActive = true;
+        currentPlayer = "X";
+        createBoard();
+    }
+
+    function resetScore() {
+        p1Score = 0;
+        p2Score = 0;
+        updateUI();
+    }
+
+    function toggleTheme() {
+        theme = theme === "dark" ? "light" : "dark";
+        document.body.classList.toggle("light");
+    }
+
+    function play(id) {
+        document.getElementById(id).currentTime = 0;
+        document.getElementById(id).play();
+    }
+
+    createBoard();
+</script>
+
+</body>
+</html>
