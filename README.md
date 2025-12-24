@@ -8,7 +8,7 @@ This project features a glowing animated background, adjustable player names, an
 ---
 
 ## 🎮 Features
-- **Glowing background** using CSS gradients and animations.
+- **Glowing button** using CSS gradients and animations.
 - **Dynamic player names**: set custom names for Player X and Player O.
 - **Interactive game board** with win/draw detection.
 - **Reset option** to start a new game instantly.
