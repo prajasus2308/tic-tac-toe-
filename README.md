@@ -1,3 +1,5 @@
+<img width="732" height="741" alt="Screenshot 2025-12-24 194751" src="https://github.com/user-attachments/assets/3e947332-7b67-4340-9886-603add3ee3e6" />
+
 # ✨ Tic Tac Toe Game
 
 A simple yet stylish **Tic Tac Toe** game built with **HTML**.  
